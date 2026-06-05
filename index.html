@@ -286,21 +286,33 @@ results.innerHTML=`
 </div>
 `;
 try{
-var response=await fetch(
-"https://api.allorigins.win/raw?url="+encodeURIComponent(link)
-);
+var hwid="Syn-Fingerprint-"+Math.random().toString(36).substring(2,15);
+var apiUrl=link;
+if(link.includes("deltaexploits.net")||link.includes("delta")){
+var keyPart=link.split("?")[1]||"";
+apiUrl="https://deltaexploits.net/api/key?hwid="+hwid+"&"+keyPart;
+}
+var response=await fetch("https://api.allorigins.win/raw?url="+encodeURIComponent(apiUrl));
 var text=await response.text();
 var foundKey="";
-var match=text.match(/["']([A-Za-z0-9\-_]{20,})["']/);
-if(match&&match[1]){
-foundKey=match[1];
-}else{
-var match2=text.match(/key[=:]["']?\s*["']?([A-Za-z0-9\-_]{15,})["']?/i);
+var match1=text.match(/["']key["']\s*:\s*["']([^"']+)["']/i);
+if(match1&&match1[1]){
+foundKey=match1[1];
+}
+if(!foundKey){
+var match2=text.match(/["']([A-Za-z0-9]{20,50})["']/);
 if(match2&&match2[1]){
 foundKey=match2[1];
-}else{
-foundKey="KEY-"+Date.now().toString(36).toUpperCase()+"-DELTA";
 }
+}
+if(!foundKey){
+var match3=text.match(/([A-Za-z0-9]{24,36})/);
+if(match3&&match3[1]){
+foundKey=match3[1];
+}
+}
+if(!foundKey){
+foundKey=text.substring(0,36);
 }
 results.innerHTML=`
 <div class="card">
@@ -325,17 +337,11 @@ results.innerHTML=`
 <div class="card">
 <div class="card-content">
 <div class="key-title">
-🔑 المفتاح الجاهز
+❌ فشل التخطي
 </div>
 <div class="key-box">
-KEY-${Date.now().toString(36).toUpperCase()}-BYPASS
+تأكد من الرابط وحاول مرة أخرى
 </div>
-<button
-class="copy-btn"
-onclick='copyKey("KEY-${Date.now().toString(36).toUpperCase()}-BYPASS")'
->
-📋 نسخ المفتاح
-</button>
 </div>
 </div>
 `;
