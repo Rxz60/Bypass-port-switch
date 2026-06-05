@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تخطي مفتاح دلتا</title>
+<title>تخطي مفتاح الهاكات</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
 *{
@@ -110,17 +110,24 @@ width:100%;
 margin:auto;
 }
 .logo{
-font-size:70px;
+font-size:65px;
 font-weight:900;
 text-align:center;
 color:#ffffff;
 margin-top:20px;
-margin-bottom:60px;
+margin-bottom:20px;
 text-shadow:
 0 0 20px #ffffff,
 0 0 40px #cccccc,
 0 0 80px #999999,
 0 0 150px #666666;
+}
+.sub{
+font-size:22px;
+text-align:center;
+color:#aaaaaa;
+margin-bottom:50px;
+text-shadow:0 0 10px rgba(255,255,255,.3);
 }
 .search-box{
 display:flex;
@@ -137,7 +144,7 @@ background:#050505;
 border:2px solid #1a1a1a;
 border-radius:30px;
 padding:0 40px;
-font-size:34px;
+font-size:30px;
 color:white;
 outline:none;
 box-shadow:
@@ -225,7 +232,7 @@ border-radius:20px;
 }
 @media(max-width:900px){
 .logo{
-font-size:45px;
+font-size:40px;
 }
 .search-box{
 flex-direction:column;
@@ -235,7 +242,7 @@ width:100%;
 height:100px;
 }
 .search-input{
-font-size:26px;
+font-size:24px;
 }
 .spinning-clock{
 width:280px;
@@ -253,20 +260,23 @@ src="https://raw.githubusercontent.com/Rxz60/-/refs/heads/main/6700FF4D-7B89-479
 <div class="glow"></div>
 <div class="wrap">
 <div class="logo">
-🔓 تخطي مفتاح دلتا
+🔓 تخطي مفتاح الهاكات
+</div>
+<div class="sub">
+حط رابط مفتاح الهاك ويطلع لك المفتاح تلقائي
 </div>
 <div class="search-box">
 <input
 type="text"
 id="link"
 class="search-input"
-placeholder="حط رابط المنفذ هنا..."
+placeholder="حط رابط مفتاح الهاك هنا..."
 >
 <button
 class="search-btn"
 onclick="getKey()"
 >
-🔍 جيب المفتاح
+🔍 فك المفتاح
 </button>
 </div>
 <div
@@ -287,45 +297,56 @@ results.innerHTML=`
 `;
 try{
 var hwid="Syn-Fingerprint-"+Math.random().toString(36).substring(2,15);
-var apiUrl=link;
-if(link.includes("deltaexploits.net")||link.includes("delta")){
-var keyPart=link.split("?")[1]||"";
-apiUrl="https://deltaexploits.net/api/key?hwid="+hwid+"&"+keyPart;
+var finalUrl=link;
+if(link.includes("deltaexploits.net")||link.includes("delta")||link.includes("key")){
+var sep=link.includes("?")?"&":"?";
+finalUrl=link+sep+"hwid="+hwid;
 }
-var response=await fetch("https://api.allorigins.win/raw?url="+encodeURIComponent(apiUrl));
+var response=await fetch("https://api.allorigins.win/raw?url="+encodeURIComponent(finalUrl));
 var text=await response.text();
 var foundKey="";
-var match1=text.match(/["']key["']\s*:\s*["']([^"']+)["']/i);
-if(match1&&match1[1]){
-foundKey=match1[1];
+var patterns=[
+/"key"\s*:\s*"([^"]+)"/i,
+/'key'\s*:\s*'([^']+)'/i,
+/"([A-Za-z0-9]{24,40})"/,
+/'([A-Za-z0-9]{24,40})'/,
+/([A-Za-z0-9]{24,40})/,
+/"([A-Za-z0-9\-_]{20,60})"/,
+/'([A-Za-z0-9\-_]{20,60})'/,
+/([A-Za-z0-9\-_]{20,60})/
+];
+for(var i=0;i<patterns.length;i++){
+var match=text.match(patterns[i]);
+if(match&&match[1]&&match[1].length>=20){
+foundKey=match[1];
+break;
+}
 }
 if(!foundKey){
-var match2=text.match(/["']([A-Za-z0-9]{20,50})["']/);
-if(match2&&match2[1]){
-foundKey=match2[1];
+var cleanText=text.replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim();
+var words=cleanText.split(" ");
+for(var j=0;j<words.length;j++){
+if(words[j].length>=24&&words[j].length<=50&&/[A-Za-z0-9]/.test(words[j])){
+foundKey=words[j];
+break;
 }
-}
-if(!foundKey){
-var match3=text.match(/([A-Za-z0-9]{24,36})/);
-if(match3&&match3[1]){
-foundKey=match3[1];
 }
 }
 if(!foundKey){
-foundKey=text.substring(0,36);
+foundKey="ماقدرنا نجيب المفتاح، تأكد من الرابط";
 }
 results.innerHTML=`
 <div class="card">
 <div class="card-content">
 <div class="key-title">
-🔑 المفتاح الجاهز
+🔑 المفتاح
 </div>
 <div class="key-box">
 ${foundKey}
 </div>
 <button
 class="copy-btn"
-onclick='copyKey("${foundKey}")'
+onclick='copyKey(${JSON.stringify(foundKey)})'
 >
 📋 نسخ المفتاح
 </button>
@@ -337,10 +358,10 @@ results.innerHTML=`
 <div class="card">
 <div class="card-content">
 <div class="key-title">
-❌ فشل التخطي
+❌ فشل الاتصال
 </div>
 <div class="key-box">
-تأكد من الرابط وحاول مرة أخرى
+تأكد من الرابط أو جرب مرة ثانية
 </div>
 </div>
 </div>
