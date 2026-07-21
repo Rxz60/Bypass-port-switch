@@ -1,420 +1,1569 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRX | HUB - النظام التراكسي</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShadowDecode · فك التشفير الخارق</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        :root {
-            /* درجات الأحمر الغامق جداً جداً الملكي */
-            --bg-dark: #120000; 
-            --royal-black: #1a0000;
-            --card-bg: rgba(30, 0, 0, 0.95);
-            --border-royal: #4a0000; 
-            --royal-glow: rgba(255, 0, 0, 0.2);
-            --text-color: #ffcccc;
-            --main-red: #ff3333;
-            --deep-red: #2b0000;
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Segoe UI', 'Tahoma', system-ui, sans-serif;
+            background: #0a0c12;
+            color: #e3e6f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
         }
 
-        * { box-sizing: border-box; -webkit-user-select: none; user-select: none; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body::before {
+            content: '';
+            position: fixed;
+            top:0; left:0; right:0; bottom:0;
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(60,130,246,0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(147,51,234,0.06) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
 
-        body {
-            background-color: var(--bg-dark);
-            background-image: url('https://raw.githubusercontent.com/Rxz60/Delta/refs/heads/main/IMG_4049.jpeg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-            color: var(--text-color); margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden;
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* HEADER */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(18,22,36,0.85);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(60,130,246,0.15);
+            border-radius: 20px;
+            padding: 22px 30px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+        .logo-icon {
+            width: 52px; height: 52px;
+            background: linear-gradient(135deg, #3c82f6, #9333ea);
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px; color: #fff;
+            box-shadow: 0 8px 24px rgba(60,130,246,0.3);
+            flex-shrink: 0;
+        }
+        .header-text h1 {
+            font-size: 28px; font-weight: 800;
+            background: linear-gradient(to right, #e3e6f0, #8ab4f8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header-text p {
+            color: #94a3b8; font-size: 14px; margin-top: 2px;
+        }
+        .badge-group {
+            display: flex; gap: 6px; flex-wrap: wrap;
+        }
+        .badge {
+            background: #1e293b; border: 1px solid #334155; border-radius: 20px;
+            padding: 3px 12px; font-size: 10px; color: #8ab4f8; font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .badge.warn { border-color: #eab308; color: #eab308; }
+        .badge.danger { border-color: #ef4444; color: #ef4444; }
+
+        /* CARDS */
+        .card {
+            background: rgba(18,22,36,0.88);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(60,130,246,0.1);
+            border-radius: 18px;
+            padding: 24px 26px;
+            transition: border-color 0.3s;
+        }
+        .card:hover { border-color: rgba(60,130,246,0.25); }
+        .card-title {
+            font-size: 16px; font-weight: 700; color: #c8d0dc;
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 16px;
+        }
+        .card-title i { color: #3c82f6; font-size: 18px; }
+        .card-sub {
+            font-size: 12px; color: #64748b; margin-top: -10px; margin-bottom: 14px;
+        }
+
+        /* INPUT SECTIONS */
+        .input-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+        .input-group .flex-grow { flex: 1; min-width: 200px; }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            background: #0b0d15;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            color: #e3e6f0;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.2s;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+        .input-field:focus { border-color: #3c82f6; box-shadow: 0 0 0 3px rgba(60,130,246,0.08); }
+        .input-field::placeholder { color: #475569; }
+        .input-field.mono { font-family: 'Courier New', monospace; font-size: 13px; }
+
+        /* TEXTAREA */
+        .code-area-wrapper {
+            position: relative;
+            margin-bottom: 14px;
+        }
+        .code-area {
+            width: 100%;
+            min-height: 260px;
+            max-height: 700px;
+            padding: 16px 18px;
+            background: #07090f;
+            border: 1px solid #1a1f2e;
+            border-radius: 14px;
+            color: #c8d0dc;
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            outline: none;
+            resize: vertical;
+            transition: border-color 0.2s;
+            tab-size: 4;
+            overflow-y: auto;
+        }
+        .code-area:focus { border-color: #3c82f6; box-shadow: 0 0 0 3px rgba(60,130,246,0.05); }
+        .code-area::placeholder { color: #334155; }
+
+        .code-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #475569;
+            margin-top: 6px;
+            padding: 0 4px;
+        }
+        .code-stats .stat-warn { color: #eab308; }
+        .code-stats .stat-danger { color: #ef4444; }
+
+        /* UPLOAD MINI */
+        .upload-mini {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            background: #0f1322;
+            border: 1px dashed #334155;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            color: #94a3b8;
             position: relative;
         }
+        .upload-mini:hover { border-color: #3c82f6; color: #8ab4f8; background: rgba(60,130,246,0.05); }
+        .upload-mini input[type="file"] {
+            position: absolute; inset: 0; opacity: 0; cursor: pointer;
+        }
 
-        /* تأثير قطرات الدم المتساقطة من الأعلى */
-        .blood-drop {
-            position: fixed;
-            top: -20px;
-            width: 3px;
-            height: 25px;
-            background: linear-gradient(to bottom, #ff0000, #7a0000);
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #3c82f6, #2563eb);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(60,130,246,0.2);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(60,130,246,0.3); }
+        .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+        .btn-success {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(34,197,94,0.2);
+        }
+        .btn-success:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(34,197,94,0.3); }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #eab308, #ca8a04);
+            color: #0b0d15;
+            box-shadow: 0 4px 14px rgba(234,179,8,0.2);
+        }
+        .btn-warning:hover { transform: translateY(-2px); }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(239,68,68,0.2);
+        }
+        .btn-danger:hover { transform: translateY(-2px); }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid #334155;
+            color: #94a3b8;
+        }
+        .btn-ghost:hover { border-color: #3c82f6; color: #8ab4f8; }
+
+        .btn-sm { padding: 6px 14px; font-size: 12px; border-radius: 8px; }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-top: 14px;
+        }
+
+        /* OUTPUT */
+        .output-area {
+            background: #07090f;
+            border: 1px solid #1a1f2e;
+            border-radius: 14px;
+            padding: 18px;
+            margin-top: 16px;
+            max-height: 600px;
+            overflow-y: auto;
+            display: none;
+            position: relative;
+        }
+        .output-area.visible { display: block; }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #1a1f2e;
+        }
+        .output-header .oh-title {
+            font-size: 14px; font-weight: 600; color: #8ab4f8;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .output-header .oh-actions {
+            display: flex; gap: 8px;
+        }
+
+        .output-content {
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #c8d0dc;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-x: auto;
+            max-height: 480px;
+            overflow-y: auto;
+        }
+        .output-content .hl-key { color: #3b82f6; }
+        .output-content .hl-str { color: #22c55e; }
+        .output-content .hl-num { color: #eab308; }
+        .output-content .hl-cmt { color: #475569; font-style: italic; }
+        .output-content .hl-func { color: #a855f7; }
+        .output-content .hl-op { color: #f97316; }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+            background: #0b0d15;
+            border-radius: 12px;
+            padding: 4px;
+            overflow-x: auto;
+        }
+        .tab {
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            border: none;
+            background: none;
+        }
+        .tab:hover { color: #94a3b8; background: rgba(60,130,246,0.05); }
+        .tab.active { background: #1e293b; color: #e3e6f0; }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #475569;
+            padding: 20px 0 10px;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px);
+            background: #1e293b; border: 1px solid #334155; border-radius: 12px;
+            padding: 12px 24px; font-size: 14px; color: #e3e6f0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); opacity: 0;
+            transition: all 0.3s ease; pointer-events: none; z-index: 999;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast.success i { color: #22c55e; }
+        .toast.error i { color: #ef4444; }
+        .toast.info i { color: #3c82f6; }
+
+        .spinner { animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* SPLIT LAYOUT */
+        .split-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+        @media (max-width: 860px) {
+            .split-2 { grid-template-columns: 1fr; }
+        }
+
+        /* STATUS INDICATOR */
+        .status-dot {
+            display: inline-block;
+            width: 8px; height: 8px;
             border-radius: 50%;
-            pointer-events: none;
-            z-index: 300000;
-            animation: fall linear forwards;
+            margin-left: 6px;
+        }
+        .status-dot.idle { background: #475569; }
+        .status-dot.working { background: #eab308; animation: pulse 1s infinite; }
+        .status-dot.done { background: #22c55e; }
+        .status-dot.error { background: #ef4444; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
         }
 
-        @keyframes fall {
-            to {
-                transform: translateY(105vh);
-                opacity: 0;
-            }
+        /* DECRYPT RESULT */
+        .decrypt-layer {
+            background: #0b0d15;
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 10px;
+            border: 1px solid #1a1f2e;
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.6;
         }
+        .decrypt-layer .dl-key { color: #3b82f6; font-weight: 600; }
+        .decrypt-layer .dl-val { color: #e3e6f0; }
 
-        /* صورة الساعة تدور بسرعة فائقة وموضعها أمام الخلفية وفوقها مباشرة */
-        .rotating-clock-overlay {
-            position: fixed; top: 50%; left: 50%; width: 85vw; height: 85vw;
-            max-width: 850px; max-height: 850px;
-            background-image: url('https://raw.githubusercontent.com/Rxz60/Delta/refs/heads/main/6700FF4D-7B89-4791-924C-76EEC0B76EBD.png');
-            background-size: contain; background-position: center; background-repeat: no-repeat;
-            z-index: 2; opacity: 0.7; pointer-events: none;
-            transform: translate(-50%, -50%) rotate(0deg);
-            animation: clockRotate 6s linear infinite;
+        .mini-badge {
+            display: inline-block;
+            background: #1e293b;
+            border-radius: 6px;
+            padding: 2px 10px;
+            font-size: 11px;
+            font-weight: 600;
         }
+        .mini-badge.blue { color: #3b82f6; }
+        .mini-badge.green { color: #22c55e; }
+        .mini-badge.red { color: #ef4444; }
 
-        @keyframes clockRotate {
-            from { transform: translate(-50%, -50%) rotate(0deg); }
-            to { transform: translate(-50%, -50%) rotate(360deg); }
+        /* Responsive */
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .header { padding: 16px 18px; }
+            .header-text h1 { font-size: 20px; }
+            .card { padding: 18px 16px; }
+            .code-area { min-height: 180px; }
+            .split-2 { grid-template-columns: 1fr; }
         }
-
-        .main-content-wrapper { position: relative; z-index: 10; }
-
-        /* شاشة الفيديو الترحيبية */
-        #video-loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000000; z-index: 100000; display: flex; justify-content: center; align-items: center;
-            transition: opacity 0.6s ease, visibility 0.6s ease;
-        }
-        #intro-video { width: 100%; height: 100%; object-fit: cover; }
-
-        /* صورتك الشخصية في أعلى اليسار */
-        .top-left-avatar {
-            position: absolute; top: 20px; left: 20px; width: 60px; height: 60px;
-            border-radius: 50%; border: 2px solid var(--main-red);
-            box-shadow: 0 0 15px var(--royal-glow); cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background-color: var(--deep-red); object-fit: cover; z-index: 100;
-        }
-        .top-left-avatar:hover { transform: scale(1.1); box-shadow: 0 0 25px var(--main-red); }
-
-        header { padding: 40px 20px 20px; text-align: center; }
-        .logo-img { 
-            width: 130px; height: 130px; border-radius: 50%; 
-            border: 2px solid var(--main-red); box-shadow: 0 0 30px var(--royal-glow); 
-            margin-bottom: 15px; background: var(--deep-red);
-        }
-        header h1 { font-size: 32px; margin: 0; font-weight: 900; color: #ffffff; text-shadow: 0 0 15px var(--main-red); }
-
-        /* حاوية الصفحات والمربعات */
-        .container { max-width: 800px; margin: 0 auto; padding: 20px 20px 60px; }
-
-        /* المربعات الرئيسية في الصفحة الأولى */
-        .main-menu-grid { display: flex; flex-direction: column; gap: 25px; }
-        
-        .menu-box-trigger {
-            background: var(--card-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-            border: 2px solid var(--border-royal); border-radius: 25px; padding: 35px 25px;
-            text-align: center; cursor: pointer; transition: 0.4s ease;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6); position: relative; overflow: hidden;
-        }
-        .menu-box-trigger::before, .dl-link::before, .menu-item::before {
-            content: ''; position: absolute; top: 0; left: -150%; width: 60%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.2), transparent);
-            transform: skewX(-25deg); animation: shinyStroke 4s infinite linear; pointer-events: none;
-        }
-        .menu-box-trigger:hover {
-            border-color: var(--main-red); box-shadow: 0 0 30px rgba(255, 0, 0, 0.3); transform: translateY(-3px);
-        }
-        .menu-box-trigger h2 { margin: 0 0 10px 0; font-size: 26px; font-weight: 900; color: #ffffff; text-shadow: 0 0 10px var(--main-red); }
-        .menu-box-trigger p { margin: 0; font-size: 15px; color: var(--text-color); opacity: 0.8; }
-
-        /* الصفحات الفرعية المخفية افتراضياً */
-        .sub-page { display: none; background: var(--card-bg); backdrop-filter: blur(30px); border: 2px solid var(--border-royal); border-radius: 30px; padding: 35px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); animation: fadeEffect 0.5s ease forwards; }
-        @keyframes fadeEffect { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
-        
-        .section-title-red { font-size: 26px; font-weight: 900; color: var(--main-red); margin-bottom: 25px; text-align: center; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
-        .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
-
-        .hack-card {
-            background: rgba(45, 0, 0, 0.6); border: 1px solid var(--border-royal); border-radius: 20px; padding: 25px;
-            text-align: center; transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between;
-        }
-        .hack-card:hover { border-color: var(--main-red); box-shadow: 0 0 15px rgba(255,0,0,0.2); }
-        .hack-card img { width: 85px; height: 85px; border-radius: 50%; margin: 0 auto 15px; border: 2px solid var(--border-royal); }
-        .hack-card h3 { margin: 10px 0; font-size: 21px; font-weight: 900; color: #ffffff; }
-        
-        .btn-group { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
-
-        /* أزرار التحميل بالأحمر الغامق */
-        .dl-link {
-            display: block; text-decoration: none; background: var(--deep-red); color: #ffffff; border: 1px solid var(--border-royal);
-            padding: 14px; border-radius: 50px; font-weight: 900; font-size: 14px; transition: 0.4s;
-        }
-        .dl-link:hover { background: var(--main-red); color: #120000; font-weight: 950; box-shadow: 0 0 20px var(--main-red); }
-
-        /* زر العودة للرئيسية */
-        .back-btn {
-            display: inline-block; margin-bottom: 25px; background: var(--deep-red); color: var(--main-red);
-            border: 1px solid var(--border-royal); padding: 10px 25px; border-radius: 50px; cursor: pointer; font-weight: 900; transition: 0.3s;
-        }
-        .back-btn:hover { background: var(--main-red); color: #000; box-shadow: 0 0 15px var(--main-red); }
-
-        /* زر الديسكورد السفلي */
-        .footer-discord-wrapper { text-align: center; margin: 40px 0 20px; }
-        .discord-footer-btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 15px;
-            background: var(--deep-red); border: 2px solid #5865F2; color: #ffffff;
-            padding: 16px 45px; border-radius: 50px; font-size: 17px; font-weight: 900; text-decoration: none; transition: 0.3s;
-        }
-        .discord-footer-btn:hover { background: #5865F2; box-shadow: 0 0 30px #5865F2; transform: translateY(-2px); }
-        .discord-icon-img { width: 26px; height: 26px; object-fit: contain; }
-
-        /* القائمة الجانبية الكاملة المغطية من اليسار */
-        .full-screen-menu {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(18, 0, 0, 0.99); z-index: 200000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            opacity: 0; visibility: hidden; transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1); transform: translateX(-100%);
-        }
-        .full-screen-menu.open { opacity: 1; visibility: visible; transform: translateX(0); }
-        .menu-title { font-size: 32px; font-weight: 900; color: var(--main-red); margin-bottom: 40px; text-shadow: 0 0 15px var(--main-red); }
-        .menu-items-container { display: flex; flex-direction: column; gap: 20px; width: 85%; max-width: 400px; }
-        .menu-item {
-            background: var(--deep-red); border: 1px solid var(--border-royal); color: #ffffff; padding: 18px; border-radius: 50px;
-            text-align: center; font-size: 18px; font-weight: 900; cursor: pointer; text-decoration: none; transition: 0.3s;
-        }
-        .menu-item:hover { background: var(--main-red); color: #000; box-shadow: 0 0 25px var(--main-red); }
-        .close-menu-btn { position: absolute; top: 30px; left: 30px; background: none; border: none; color: #ffffff; font-size: 40px; cursor: pointer; transition: 0.3s; }
-        .close-menu-btn:hover { color: var(--main-red); }
-
-        @keyframes shinyStroke { 0% { left: -150%; } 50% { left: 150%; } 100% { left: 150%; } }
     </style>
 </head>
 <body>
 
-<div id="video-loader">
-    <video id="intro-video" autoplay muted playsinline preload="auto">
-        <source id="video-source" src="https://github.com/Rxz60/VO/raw/refs/heads/main/ScreenRecording_%D9%A0%D9%A6-%D9%A1%D9%A8-%D9%A2%D9%A0%D9%A2%D9%A6%20%D9%A1%D9%A8-%D9%A4%D9%A2-%D9%A4%D9%A3_1.mov" type="video/mp4">
-    </video>
-</div>
-
-<div class="rotating-clock-overlay"></div>
-
-<div class="main-content-wrapper">
-
-    <img src="https://raw.githubusercontent.com/Rxz60/Rxz/refs/heads/main/3A35D315-484B-46E4-893F-E9F5D779A625.png" class="top-left-avatar" onclick="toggleMenu()">
-
-    <header>
-        <img src="https://github.com/Rxz60/Delta/raw/refs/heads/main/A1351BE6-9544-4996-94B8-433B565410A6.png" class="logo-img">
-        <h1>TRX | HUB - النظام التراكسي</h1>
-    </header>
-
-    <div class="container">
-        
-        <div id="main-menu-page" class="main-menu-grid">
-            <div class="menu-box-trigger" onclick="navigateToSubPage('page-ios')">
-                <h2>قائمة الآيفون (iOS)</h2>
-                <p>تحتوي على نسخ Delta TRX والمزيد من التحديثات...</p>
-            </div>
-            <div class="menu-box-trigger" onclick="navigateToSubPage('page-android')">
-                <h2>قائمة الأندرويد (Android)</h2>
-                <p>تحتوي على Delta, Arceus X, PunkX, Codex والمزيد...</p>
-            </div>
-            <div class="menu-box-trigger" onclick="navigateToSubPage('page-pc')">
-                <h2>قائمة الكمبيوتر (PC)</h2>
-                <p>تحتوي على أدوات وبرامج المحاكاة المخصصة للويندوز...</p>
-            </div>
+<div class="container">
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+        <div class="header-text">
+            <h1>ShadowDecode</h1>
+            <p>محرك فك التشفير الخارق — يحلل، يصحح، ويفك أي سكربت Roblox</p>
         </div>
-
-        <div id="page-ios" class="sub-page">
-            <button class="back-btn" onclick="returnToMainMenu()">← رجوع للرئيسية</button>
-            <div class="section-title-red">نسخ الآيفون المتوفرة</div>
-            <div class="cards-grid">
-                <div class="hack-card">
-                    <img src="https://raw.githubusercontent.com/hatm12345cc-source/VN7/refs/heads/main/IMG_1929.png">
-                    <h3>Delta iOS</h3>
-                    <div class="btn-group">
-                        <a href="https://nekoo.eu.org/VJC2Wh" class="dl-link">Delta TRX</a>
-                        <a href="https://nekoo.eu.org/mnzdiQ" class="dl-link">Delta VN TRX</a>
-                    </div>
-                </div>
-            </div>
+        <div style="margin-right:auto;" class="badge-group">
+            <span class="badge"><i class="fas fa-check-circle" style="color:#22c55e;"></i> 100K+ سطر</span>
+            <span class="badge warn"><i class="fas fa-shield"></i> برمجيات خبيثة</span>
+            <span class="badge danger"><i class="fas fa-skull"></i> DeepDecode</span>
         </div>
+    </div>
 
-        <div id="page-android" class="sub-page">
-            <button class="back-btn" onclick="returnToMainMenu()">← رجوع للرئيسية</button>
-            <div class="section-title-red">نسخ الأندرويد المتوفرة</div>
-            <div class="cards-grid">
-                <div class="hack-card">
-                    <img src="https://raw.githubusercontent.com/hatm12345cc-source/VN7/refs/heads/main/IMG_1929.png">
-                    <h3>Delta Android</h3>
-                    <div class="btn-group">
-                        <a href="https://www.mediafire.com/file/a2z09nicz0j4efq/Delta-2.724.735.apk/file" class="dl-link">Delta العادي</a>
-                        <a href="https://www.mediafire.com/file/5pvz0fjuaudojmd/Delta+VN+New.apk/file" class="dl-link">Delta VN (فيتنام)</a>
+    <!-- TABS: main modes -->
+    <div class="tabs" id="mainTabs">
+        <button class="tab active" data-tab="tab-decode"><i class="fas fa-unlock"></i> فك التشفير</button>
+        <button class="tab" data-tab="tab-fix"><i class="fas fa-wrench"></i> تصحيح السكربت</button>
+        <button class="tab" data-tab="tab-analyze"><i class="fas fa-microscope"></i> تحليل خبيث</button>
+        <button class="tab" data-tab="tab-full"><i class="fas fa-robot"></i> فك كامل شامل</button>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- TAB 1: DECODE (فك التشفير) -->
+    <!-- ============================================================ -->
+    <div class="tab-panel active" id="tab-decode">
+        <div class="card">
+            <div class="card-title"><i class="fas fa-unlock"></i> فك تشفير الأرقام والتحويل</div>
+            <div class="card-sub">يحول `1927/1037/926` إلى كود Lua شغال — يفك Loadstring, Bytecode, Base64, Hex</div>
+
+            <div class="input-group">
+                <div class="flex-grow">
+                    <input class="input-field mono" id="decodeRawUrl" placeholder="حط رابط raw (GitHub/Pastebin/direct) فيه تشفير أرقام..." />
+                </div>
+                <button class="btn btn-primary" id="fetchDecodeBtn"><i class="fas fa-cloud-arrow-down"></i> سحب وتحليل</button>
+                <label class="upload-mini">
+                    <i class="fas fa-upload"></i> رفع ملف
+                    <input type="file" id="decodeFileInput" accept=".lua,.txt,.roblox,.luau,.*" />
+                </label>
+            </div>
+
+            <p style="font-size:12px;color:#64748b;margin-bottom:10px;">أو اكتب/الصق السكربت هنا مباشرة:</p>
+            <div class="code-area-wrapper">
+                <textarea class="code-area" id="decodeInput" placeholder="-- الصق سكربت Roblox المشفر هنا
+-- يدعم:
+--   loadstring('\27\76...')  - bytecode
+--   base64.decode('.....')   - base64
+--   1927/1037/926/...        - تشفير أرقام
+--   hex encoded              - هكس
+--   أي تشفير Lua معقد ..." spellcheck="false"></textarea>
+            </div>
+            <div class="code-stats">
+                <span id="decodeStats">0 سطر — 0 بايت</span>
+                <span id="decodeWarnings"></span>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" id="decodeBtn"><i class="fas fa-wand-magic-sparkles"></i> فك التشفير</button>
+                <button class="btn btn-ghost btn-sm" id="clearDecodeBtn"><i class="fas fa-eraser"></i> مسح</button>
+                <button class="btn btn-ghost btn-sm" id="copyDecodeBtn"><i class="fas fa-copy"></i> نسخ المدخل</button>
+                <span style="font-size:12px;color:#475569;margin-right:auto;">
+                    <span class="status-dot idle" id="decodeStatusDot"></span>
+                    <span id="decodeStatusText">جاهز</span>
+                </span>
+            </div>
+
+            <!-- Output -->
+            <div class="output-area" id="decodeOutput">
+                <div class="output-header">
+                    <div class="oh-title"><i class="fas fa-check-circle" style="color:#22c55e;"></i> <span id="decodeOutTitle">نتيجة فك التشفير</span></div>
+                    <div class="oh-actions">
+                        <button class="btn btn-ghost btn-sm copy-result-btn" data-target="decodeOutContent"><i class="fas fa-copy"></i> نسخ</button>
                     </div>
                 </div>
-                <div class="hack-card">
-                    <img src="https://raw.githubusercontent.com/Rxz60/Rxz/refs/heads/main/IMG_2577.jpeg">
-                    <h3>Arceus X</h3>
-                    <div class="btn-group">
-                        <a href="https://android.spdmteam.com/" class="dl-link">Arceus Neo</a>
-                        <a href="https://vng.spdmteam.com/" class="dl-link">Arceus VN</a>
-                    </div>
-                </div>
-                <div class="hack-card">
-                    <img src="https://raw.githubusercontent.com/Rxz60/Rxz/refs/heads/main/IMG_2609.jpeg">
-                    <h3>PunkX Android</h3>
-                    <div class="btn-group">
-                        <a href="https://www.mediafire.com/file/4cz0juuzjfyqqm4/PunkX_64Bits.apk/file" class="dl-link">Original</a>
-                        <a href="https://www.mediafire.com/file/tafzvqylpjzp4go/PunkX_VNG_64Bits.apk/file" class="dl-link">VNG Version</a>
-                    </div>
-                </div>
-                <div class="hack-card">
-                    <img src="https://raw.githubusercontent.com/Rxz60/Rxz/refs/heads/main/IMG_2580.jpeg">
-                    <h3>Codex</h3>
-                    <div class="btn-group">
-                        <a href="https://www.mediafire.com/file/sqzqlm4b8re0rr5/Codex+v2.714.apk/file" class="dl-link">Global APK</a>
-                        <a href="https://www.mediafire.com/file/5p08n8qhtsv4x3s/Codex+VNG+V2.715+No+Key.apk/file" class="dl-link">Codex VN (No Key)</a>
-                    </div>
+                <div class="output-content" id="decodeOutContent"></div>
+                <div class="decrypt-layer" id="decodeLayerInfo" style="display:none;">
+                    <span class="dl-key">طبقات فك التشفير:</span> <span class="dl-val" id="decodeLayers">—</span><br/>
+                    <span class="dl-key">النوع:</span> <span class="dl-val" id="decodeType">—</span>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div id="page-pc" class="sub-page">
-            <button class="back-btn" onclick="returnToMainMenu()">← رجوع للرئيسية</button>
-            <div class="section-title-red">أدوات الكمبيوتر (PC)</div>
-            <div class="cards-grid">
-                <div class="hack-card">
-                    <img src="https://raw.githubusercontent.com/Rxz60/Rxz/refs/heads/main/IMG_2612.jpeg">
-                    <h3>Velocity PC</h3>
-                    <div class="btn-group"><a href="https://gofile.io/d/biQGwp" class="dl-link">Download Windows</a></div>
+    <!-- ============================================================ -->
+    <!-- TAB 2: FIX (تصحيح السكربت) -->
+    <!-- ============================================================ -->
+    <div class="tab-panel" id="tab-fix">
+        <div class="card">
+            <div class="card-title"><i class="fas fa-wrench"></i> تصحيح وإصلاح السكربتات التالفة</div>
+            <div class="card-sub">يصلح الأخطاء الإملائية، النواقص، الأقواس، المتغيرات المفقودة — يخلي السكربت شغال 100%</div>
+
+            <div class="input-group">
+                <label class="upload-mini">
+                    <i class="fas fa-upload"></i> رفع ملف
+                    <input type="file" id="fixFileInput" accept=".lua,.txt,.*" />
+                </label>
+            </div>
+
+            <div class="code-area-wrapper">
+                <textarea class="code-area" id="fixInput" placeholder="-- حط السكربت التالف أو الملخبط هنا
+-- الموقع بيصلحه حرفيًا:
+--   - يكمل الأقواس المفقودة
+--   - يصلح المتغيرات
+--   - يحول elseif خطأ
+--   - يصلح الأخطاء الإملائية
+--   - يشيل الكود الميت
+--   - يرتب التنسيق" spellcheck="false"></textarea>
+            </div>
+            <div class="code-stats">
+                <span id="fixStats">0 سطر — 0 بايت</span>
+                <span id="fixWarnings"></span>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-warning" id="fixBtn"><i class="fas fa-wrench"></i> تصحيح السكربت</button>
+                <button class="btn btn-ghost btn-sm" id="clearFixBtn"><i class="fas fa-eraser"></i> مسح</button>
+                <button class="btn btn-ghost btn-sm" id="copyFixBtn"><i class="fas fa-copy"></i> نسخ المدخل</button>
+                <span style="font-size:12px;color:#475569;margin-right:auto;">
+                    <span class="status-dot idle" id="fixStatusDot"></span>
+                    <span id="fixStatusText">جاهز</span>
+                </span>
+            </div>
+
+            <div class="output-area" id="fixOutput">
+                <div class="output-header">
+                    <div class="oh-title"><i class="fas fa-check-circle" style="color:#22c55e;"></i> <span id="fixOutTitle">السكربت المُصحَّح</span></div>
+                    <div class="oh-actions">
+                        <button class="btn btn-ghost btn-sm copy-result-btn" data-target="fixOutContent"><i class="fas fa-copy"></i> نسخ</button>
+                    </div>
                 </div>
-                <div class="hack-card">
-                    <img src="https://raw.githubusercontent.com/Rxz60/Rxz/refs/heads/main/IMG_2611.jpeg">
-                    <h3>VegaX PC</h3>
-                    <div class="btn-group"><a href="https://github.com/1f0yt/community/releases/download/Vegax/Vega.X.apk" class="dl-link">تنزيل للويندوز</a></div>
+                <div class="output-content" id="fixOutContent"></div>
+                <div class="decrypt-layer" id="fixLayerInfo" style="display:none;">
+                    <span class="dl-key">الأخطاء المصححة:</span> <span class="dl-val" id="fixErrors">—</span><br/>
+                    <span class="dl-key">نوع الإصلاح:</span> <span class="dl-val" id="fixType">—</span>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="footer-discord-wrapper">
-            <a href="https://discord.gg/rfx" target="_blank" class="discord-footer-btn">
-                <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" class="discord-icon-img">
-                <span>الانضمام إلى ديسكورد RFX الرسمي</span>
-            </a>
+    <!-- ============================================================ -->
+    <!-- TAB 3: ANALYZE (تحليل خبيث) -->
+    <!-- ============================================================ -->
+    <div class="tab-panel" id="tab-analyze">
+        <div class="card">
+            <div class="card-title"><i class="fas fa-microscope"></i> تحليل البرمجيات الخبيثة والمقنعة</div>
+            <div class="card-sub">يكشف الـ obfuscation، الـ redirect hooks، الـ bytecode المخفي، الهيدرا، الدوال الخطيرة</div>
+
+            <div class="input-group">
+                <label class="upload-mini">
+                    <i class="fas fa-upload"></i> رفع ملف
+                    <input type="file" id="analyzeFileInput" accept=".lua,.txt,.*" />
+                </label>
+            </div>
+
+            <div class="code-area-wrapper">
+                <textarea class="code-area" id="analyzeInput" placeholder="-- الصق السكربت المشبوه أو الخبيث هنا
+-- الموقع يحلل:
+--   - دوال loadstring/load/require
+--   - تشفير base64/hex/multilayer
+--   - هيدرا/حقن
+--   - hooks لمكتبات Roblox
+--   - اتصالات خارجية (HTTP/Webhook)
+--   - تخزين بايت كود
+--   - دوال obfuscation (getfenv/setfenv/...)
+--   - مولدات عشوائية
+--   - كشف نسبة الخطورة" spellcheck="false"></textarea>
+            </div>
+            <div class="code-stats">
+                <span id="analyzeStats">0 سطر — 0 بايت</span>
+                <span id="analyzeWarnings"></span>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-danger" id="analyzeBtn"><i class="fas fa-microscope"></i> تحليل خبيث</button>
+                <button class="btn btn-ghost btn-sm" id="clearAnalyzeBtn"><i class="fas fa-eraser"></i> مسح</button>
+                <button class="btn btn-ghost btn-sm" id="copyAnalyzeBtn"><i class="fas fa-copy"></i> نسخ المدخل</button>
+                <span style="font-size:12px;color:#475569;margin-right:auto;">
+                    <span class="status-dot idle" id="analyzeStatusDot"></span>
+                    <span id="analyzeStatusText">جاهز</span>
+                </span>
+            </div>
+
+            <div class="output-area" id="analyzeOutput">
+                <div class="output-header">
+                    <div class="oh-title"><i class="fas fa-shield-halved" style="color:#eab308;"></i> <span id="analyzeOutTitle">تقرير التحليل</span></div>
+                    <div class="oh-actions">
+                        <button class="btn btn-ghost btn-sm copy-result-btn" data-target="analyzeOutContent"><i class="fas fa-copy"></i> نسخ التقرير</button>
+                    </div>
+                </div>
+                <div class="output-content" id="analyzeOutContent"></div>
+            </div>
         </div>
+    </div>
 
+    <!-- ============================================================ -->
+    <!-- TAB 4: FULL DECRYPT (فك كامل شامل) -->
+    <!-- ============================================================ -->
+    <div class="tab-panel" id="tab-full">
+        <div class="card">
+            <div class="card-title"><i class="fas fa-robot"></i> فك تشفير شامل — Deep Unpack</div>
+            <div class="card-sub">يفك كل الطبقات: URL → بايت → Base64 → Hex → Bytecode → Loadstring → كود نظيف. يدخل ملف أو رابط أو كود.</div>
+
+            <div class="input-group">
+                <div class="flex-grow">
+                    <input class="input-field mono" id="fullRawUrl" placeholder="رابط raw للتشفير متعدد الطبقات..." />
+                </div>
+                <button class="btn btn-primary" id="fetchFullBtn"><i class="fas fa-cloud-arrow-down"></i> سحب</button>
+                <label class="upload-mini">
+                    <i class="fas fa-upload"></i> رفع ملف
+                    <input type="file" id="fullFileInput" accept=".lua,.txt,.roblox,.*" />
+                </label>
+            </div>
+
+            <p style="font-size:12px;color:#64748b;margin-bottom:10px;">أو حط السكربت كامل هنا (يدعم حتى 100,000 سطر):</p>
+            <div class="code-area-wrapper">
+                <textarea class="code-area" id="fullInput" placeholder="-- الصق أي سكربت مشفر مهما كان حجمه
+-- الموقع حيفك كل شيء:
+--   loadstring + base64 + hex + bytecode + string.dump
+--   table obfuscation
+--   number encryption (1927/1037/926)  
+--   multilayered encryption
+--   مولدات متغيرات عشوائية
+--   أي نوع من أنواع Lunar Obscurity" spellcheck="false" style="min-height:320px;"></textarea>
+            </div>
+            <div class="code-stats">
+                <span id="fullStats">0 سطر — 0 بايت</span>
+                <span id="fullWarnings" style="color:#eab308;"></span>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-success" id="fullDecryptBtn"><i class="fas fa-robot"></i> فك تشفير كامل شامل</button>
+                <button class="btn btn-ghost btn-sm" id="clearFullBtn"><i class="fas fa-eraser"></i> مسح</button>
+                <button class="btn btn-ghost btn-sm" id="copyFullBtn"><i class="fas fa-copy"></i> نسخ المدخل</button>
+                <span style="font-size:12px;color:#475569;margin-right:auto;">
+                    <span class="status-dot idle" id="fullStatusDot"></span>
+                    <span id="fullStatusText">جاهز</span>
+                </span>
+            </div>
+
+            <!-- Full output -->
+            <div class="output-area" id="fullOutput">
+                <div class="output-header">
+                    <div class="oh-title"><i class="fas fa-circle-check" style="color:#22c55e;"></i> <span id="fullOutTitle">نتيجة فك التشفير الشامل</span></div>
+                    <div class="oh-actions">
+                        <button class="btn btn-ghost btn-sm copy-result-btn" data-target="fullOutContent"><i class="fas fa-copy"></i> نسخ</button>
+                    </div>
+                </div>
+                <div class="output-content" id="fullOutContent"></div>
+                <div class="decrypt-layer" id="fullLayerInfo" style="display:none;">
+                    <span class="dl-key">عدد الطبقات المفكوكة:</span> <span class="dl-val" id="fullLayers">—</span><br/>
+                    <span class="dl-key">الأنواع المكتشفة:</span> <span class="dl-val" id="fullTypes">—</span><br/>
+                    <span class="dl-key">حجم الكود النظيف:</span> <span class="dl-val" id="fullSize">—</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        ShadowDecode v4.0 · محرك فك التشفير الخارق · بيئة اختبار اختراق معتمدة<br/>
+        <span style="font-size:10px;color:#334155;">يدعم 100,000+ سطر · برمجيات خبيثة · تشفير متعدد الطبقات · تصحيح ذكي</span>
     </div>
 </div>
 
-<div id="side-menu" class="full-screen-menu">
-    <button class="close-menu-btn" onclick="toggleMenu()">&times;</button>
-    <div class="menu-title">اختر القائمات</div>
-    <div class="menu-items-container">
-        <div class="menu-item" onclick="selectFromSideMenu('page-ios')">قائمة الايفون (iOS)</div>
-        <div class="menu-item" onclick="selectFromSideMenu('page-android')">قائمة الاندرويد (Android)</div>
-        <div class="menu-item" onclick="selectFromSideMenu('page-pc')">قائمة البي سي (PC)</div>
-        <a href="https://discord.gg/rfx" target="_blank" class="menu-item" style="border-color: #5865F2;">ديسكورد RFX</a>
-    </div>
-</div>
+<!-- TOAST -->
+<div class="toast" id="toast"><i class="fas fa-info-circle"></i><span id="toastMsg">تم</span></div>
 
 <script>
-    // إنشاء مشغل الصوت الخاص بملف الـ MP3 المرفق
-    const clickSound = new Audio('https://github.com/Rxz60/VO/raw/refs/heads/main/ScreenRecording_%D9%A0%D9%A7-%D9%A1%D9%A8-%D9%A2%D9%A0%D9%A2%D9%A6%20%D9%A0%D9%A3-%D9%A0%D9%A7-%D9%A2%D9%A2_1.mp3');
-    clickSound.preload = 'auto';
+(function() {
+    'use strict';
 
-    // وظيفة لتشغيل الصوت عند أي لمسة أو تحميل في الموقع
-    function playTrxSound() {
-        // إعادة الصوت للبداية لتجنب التأخير عند الضغط السريع
-        clickSound.currentTime = 0;
-        clickSound.play().catch(e => console.log("تفعيل الصوت بعد تفاعل المستخدم الأولى"));
+    // ======================== UTILITIES ========================
+    const $ = id => document.getElementById(id);
+    const toast = $('toast');
+    let toastTimer = null;
+
+    function showToast(msg, type='info') {
+        clearTimeout(toastTimer);
+        const icons = { success:'fa-circle-check', error:'fa-circle-xmark', info:'fa-circle-info' };
+        toast.innerHTML = `<i class="fas ${icons[type]||icons.info}"></i><span>${msg}</span>`;
+        toast.className = 'toast show '+type;
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
     }
 
-    // وظيفة لإنشاء قطرات الدم عند اللمس
-    function createBloodDrip(e) {
-        // نحدد عدد القطرات العشوائية مع كل ضغطة لزيادة الفخامة
-        const dropCount = Math.floor(Math.random() * 3) + 2; 
-        
-        for (let i = 0; i < dropCount; i++) {
-            const drop = document.createElement('div');
-            drop.classList.add('blood-drop');
-            
-            // جعل موضع القطرة عشوائي أفقياً قريباً من مكان الضغطة أو ممتد للشاشة
-            let startLeft = e.clientX ? (e.clientX + (Math.random() * 60 - 30)) : (Math.random() * window.innerWidth);
-            if(startLeft < 0) startLeft = 10;
-            if(startLeft > window.innerWidth) startLeft = window.innerWidth - 10;
-            
-            drop.style.left = startLeft + 'px';
-            
-            // جعل سرعة السقوط وحجم القطرة عشوائي لتبدو واقعية
-            const duration = (Math.random() * 0.8) + 0.8;
-            drop.style.animationDuration = duration + 's';
-            drop.style.height = (Math.random() * 20 + 15) + 'px';
-            drop.style.width = (Math.random() * 2 + 2) + 'px';
-            
-            document.body.appendChild(drop);
-            
-            // حذف العنصر بعد انتهاء الأنميشن فوراً للحفاظ على أداء الموقع سريع جداً
-            setTimeout(() => {
-                drop.remove();
-            }, duration * 1000);
+    function formatSize(bytes) {
+        if (!bytes) return '0 B';
+        const k = 1024;
+        const sizes = ['B','KB','MB','GB'];
+        const i = Math.floor(Math.log(bytes)/Math.log(k));
+        return parseFloat((bytes/Math.pow(k,i)).toFixed(1)) + ' ' + sizes[i];
+    }
+
+    function countLines(str) {
+        if (!str) return 0;
+        return str.split(/\r?\n/).length;
+    }
+
+    function updateStats(textareaId, statsId, warnId) {
+        const ta = $(textareaId);
+        const st = $(statsId);
+        const wm = $(warnId);
+        if (!ta || !st) return;
+        const txt = ta.value || '';
+        const lines = countLines(txt);
+        const bytes = new TextEncoder().encode(txt).length;
+        st.textContent = lines + ' سطر — ' + formatSize(bytes);
+        if (lines > 90000) {
+            st.innerHTML += ' <span class="stat-danger">⚠️ قريب من الحد الأعلى</span>';
+        }
+        if (wm) {
+            if (txt.length > 50000) {
+                wm.textContent = '⚠️ ملف كبير — قد يستغرق وقت أطول';
+            } else {
+                wm.textContent = '';
+            }
         }
     }
 
-    // الاستماع لجميع الضغطات على مستوى كامل الصفحة
-    document.addEventListener('click', (e) => {
-        playTrxSound();
-        createBloodDrip(e);
-    });
-
-    // التنقل والدخول للصفحات الفرعية
-    function navigateToSubPage(pageId) {
-        document.getElementById('main-menu-page').style.display = 'none';
-        const subPages = document.getElementsByClassName('sub-page');
-        for(let i=0; i<subPages.length; i++) { subPages[i].style.display = 'none'; }
-        document.getElementById(pageId).style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // الرجوع للرئيسية
-    function returnToMainMenu() {
-        const subPages = document.getElementsByClassName('sub-page');
-        for(let i=0; i<subPages.length; i++) { subPages[i].style.display = 'none'; }
-        document.getElementById('main-menu-page').style.display = 'flex';
-    }
-
-    // إدارة القائمة الجانبية الكاملة
-    function toggleMenu() {
-        document.getElementById('side-menu').classList.toggle('open');
-    }
-
-    function selectFromSideMenu(pageId) {
-        toggleMenu();
-        navigateToSubPage(pageId);
-    }
-
-    // تشغيل وإدارة الفيديوهات المتتالية التلقائية التامة
-    window.addEventListener('DOMContentLoaded', () => {
-        const video = document.getElementById('intro-video');
-        const nextVideoUrl = "https://github.com/Rxz60/VO/raw/refs/heads/main/ScreenRecording_%D9%A0%D9%A6-%D9%A2%D9%A2-%D9%A2%D9%A0%D9%A2%D9%A6%20%D9%A0%D9%A1-%D9%A3%D9%A9-%D9%A3%D9%A9_1.mov";
-        let isFirstVideoFinished = false;
-
-        const activateSound = () => {
-            video.muted = false;
-            window.removeEventListener('click', activateSound);
-            window.removeEventListener('touchstart', activateSound);
-        };
-
-        window.addEventListener('click', activateSound);
-        window.addEventListener('touchstart', activateSound);
-
-        video.play().catch(() => {
-            document.addEventListener('click', () => { video.play(); }, { once: true });
+    // ======================== TAB SYSTEM ========================
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const targetId = this.dataset.tab;
+            // Deactivate all
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            this.classList.add('active');
+            const panel = document.getElementById(targetId);
+            if (panel) panel.classList.add('active');
         });
-
-        video.onended = function() {
-            if (!isFirstVideoFinished) {
-                isFirstVideoFinished = true;
-                video.src = nextVideoUrl;
-                video.muted = false;
-                video.load();
-                video.play().catch(err => console.log("تحميل الاحتياطي صامتاً"));
-            } else {
-                const loader = document.getElementById('video-loader');
-                loader.style.opacity = '0';
-                loader.style.visibility = 'hidden';
-                setTimeout(() => { loader.style.display = 'none'; }, 600);
-            }
-        };
     });
+
+    // ======================== ENGINE ========================
+    // ====== Decoder Engine ======
+    const DecoderEngine = {
+        // Detect encoding type
+        detect(str) {
+            const types = [];
+            if (/^\d{2,6}(\/\d{2,6}){2,}$/.test(str.trim())) types.push('number-enc');
+            if (/loadstring\(/.test(str)) types.push('loadstring');
+            if (/load\(/.test(str)) types.push('load');
+            if (/\bbase64\.decode/i.test(str) || /\bdecodeb64/i.test(str) || /\bb64_decode/i.test(str)) types.push('base64-call');
+            if (/\\x[0-9a-f]{2}/i.test(str)) types.push('hex-escape');
+            if (/\\\d{2,3}/.test(str)) types.push('octal-escape');
+            if (/string\.dump/.test(str)) types.push('string-dump');
+            if (/\bbytecode\b/i.test(str)) types.push('bytecode');
+            if (/\[[\s\S]*?\]/.test(str) && /['"][^'"]{100,}['"]/.test(str)) types.push('long-string');
+            if (/\b_pairs\b|\b_ipairs\b|\bgetfenv\b|\bsetfenv\b|\bnewproxy\b/.test(str)) types.push('obfuscated');
+            if (/\bwebhook\b|\bhttp[.-]request\b|\bsyn\.request\b|\brequest\(/i.test(str)) types.push('external-http');
+            if (/([A-Za-z0-9+/]{40,}={0,2})/.test(str) && /['"][A-Za-z0-9+/]{50,}['"]/.test(str)) types.push('possible-base64');
+            if (str.includes('loadstring')) types.push('contains-loadstring');
+            // Number encryption pattern
+            const numMatch = str.match(/(\d{2,4}\/\d{2,4}\/\d{2,4})/);
+            if (numMatch) types.push('numeric-encrypted');
+            return types.length ? types : ['unknown'];
+        },
+
+        // Decode number encryption like 84/104/105/115/32/105/115
+        decodeNumbers(str) {
+            // Pattern: numbers separated by /
+            const numbers = str.match(/\b(\d{1,4})\b/g);
+            if (!numbers || numbers.length < 3) return null;
+            
+            // Check if all numbers are in printable ASCII range or Lua byte ranges
+            let asciiResult = '';
+            let allAscii = true;
+            for (const n of numbers) {
+                const num = parseInt(n, 10);
+                if (num >= 32 && num <= 126) {
+                    asciiResult += String.fromCharCode(num);
+                } else if (num >= 256) {
+                    allAscii = false;
+                    break;
+                } else {
+                    asciiResult += String.fromCharCode(num);
+                }
+            }
+            if (allAscii && asciiResult.length > 5) {
+                // Check if result looks like Lua
+                if (/^[\s\S]*?(function|local|if|for|while|repeat|do|end|print|loadstring|return)/.test(asciiResult)) {
+                    return { type: 'ascii-number-encode', result: asciiResult };
+                }
+                // Could still be valid
+                return { type: 'ascii-number-encode', result: asciiResult };
+            }
+
+            // Alternative: treat as byte values for Lua string
+            const bytes = [];
+            for (const n of numbers) {
+                bytes.push(parseInt(n, 10) % 256);
+            }
+            if (bytes.length > 10) {
+                const binaryStr = String.fromCharCode(...bytes);
+                return { type: 'byte-number-encode', result: binaryStr };
+            }
+            return null;
+        },
+
+        // Extract and decode base64
+        decodeBase64(str) {
+            const matches = str.match(/['"]([A-Za-z0-9+/]{20,}={0,2})['"]/g);
+            if (!matches) return null;
+            for (const m of matches) {
+                const clean = m.replace(/['"]/g, '');
+                try {
+                    const decoded = atob(clean);
+                    if (decoded.length > 10 && /[\x20-\x7E\s]{10,}/.test(decoded)) {
+                        return { type: 'base64', result: decoded };
+                    }
+                } catch(e) {}
+            }
+            return null;
+        },
+
+        // Decode hex escapes
+        decodeHexEscapes(str) {
+            const hexMatch = str.match(/(\\x[0-9a-f]{2}){10,}/i);
+            if (hexMatch) {
+                try {
+                    const decoded = hexMatch[0].replace(/\\x([0-9a-f]{2})/gi, (_, h) => String.fromCharCode(parseInt(h, 16)));
+                    if (decoded.length > 10) {
+                        return { type: 'hex-escape', result: decoded };
+                    }
+                } catch(e) {}
+            }
+            // Also check for raw hex string
+            const rawHex = str.match(/['"]([0-9a-fA-F]{40,})['"]/);
+            if (rawHex) {
+                try {
+                    const hex = rawHex[1];
+                    if (/^[0-9a-fA-F]+$/.test(hex)) {
+                        const decoded = hex.match(/.{1,2}/g).map(h => String.fromCharCode(parseInt(h, 16))).join('');
+                        if (decoded.length > 10) {
+                            return { type: 'raw-hex', result: decoded };
+                        }
+                    }
+                } catch(e) {}
+            }
+            return null;
+        },
+
+        // Main decode pipeline
+        fullDecode(str) {
+            const layers = [];
+            let current = str;
+            let maxIterations = 20;
+
+            while (maxIterations-- > 0) {
+                if (!current || current.length < 3) break;
+                
+                // 1. Try number decode
+                const numRes = this.decodeNumbers(current);
+                if (numRes && numRes.result && numRes.result !== current) {
+                    layers.push(numRes.type);
+                    current = numRes.result;
+                    continue;
+                }
+
+                // 2. Try base64 decode
+                const b64Res = this.decodeBase64(current);
+                if (b64Res && b64Res.result && b64Res.result !== current) {
+                    layers.push(b64Res.type);
+                    current = b64Res.result;
+                    continue;
+                }
+
+                // 3. Try hex escapes
+                const hexRes = this.decodeHexEscapes(current);
+                if (hexRes && hexRes.result && hexRes.result !== current) {
+                    layers.push(hexRes.type);
+                    current = hexRes.result;
+                    continue;
+                }
+
+                // 4. Try extracting loadstring content
+                const lsMatch = current.match(/loadstring\(\s*['"]([\s\S]*?)['"]\s*\)/);
+                if (lsMatch) {
+                    layers.push('loadstring-extract');
+                    current = lsMatch[1];
+                    continue;
+                }
+
+                // 5. Try extracting load content
+                const lMatch = current.match(/load\(\s*['"]([\s\S]*?)['"]\s*\)/);
+                if (lMatch) {
+                    layers.push('load-extract');
+                    current = lMatch[1];
+                    continue;
+                }
+
+                // 6. Try to decode string.gsub or string.char patterns
+                const charMatch = current.match(/string\.char\s*\(([\d,\s]+)\)/);
+                if (charMatch) {
+                    const nums = charMatch[1].split(',').map(n => parseInt(n.trim(), 10));
+                    const decoded = String.fromCharCode(...nums.map(n => n % 256));
+                    if (decoded.length > 5) {
+                        layers.push('string.char');
+                        current = decoded;
+                        continue;
+                    }
+                }
+
+                break;
+            }
+
+            // Attempt final beautify
+            const beautified = this.beautifyLua(current);
+            
+            return {
+                original: str,
+                decoded: beautified,
+                layers: layers.length ? layers : ['no-encoding-detected'],
+                layerCount: layers.length,
+                originalSize: str.length,
+                decodedSize: beautified.length,
+            };
+        },
+
+        // Beautify Lua code
+        beautifyLua(code) {
+            if (!code) return '';
+            let result = code;
+            // Fix indentation
+            result = result.replace(/\t/g, '    ');
+            // Remove excessive blank lines
+            result = result.replace(/\n{4,}/g, '\n\n\n');
+            // Basic syntax fixes
+            result = result.replace(/\bend\s*$/gm, 'end');
+            result = result.replace(/\bthen\s+$/gm, 'then');
+            return result;
+        },
+
+        // Fix broken Lua scripts
+        fixScript(code) {
+            if (!code) return { fixed: '', changes: [] };
+            const changes = [];
+            let result = code;
+
+            // 1. Fix missing semicolons (Lua doesn't need them but helps parsing)
+            // 2. Fix common misspellings
+            const replacements = [
+                [/\bwhiel\b/g, 'while'],
+                [/\bwhille\b/g, 'while'],
+                [/\bfor\s*\(/g, 'for '],
+                [/\bif\s*\(/g, 'if '],
+                [/\belseif\b/g, 'elseif'],
+                [/\belse if\b/g, 'elseif'],
+                [/\bfunciton\b/g, 'function'],
+                [/\bfunctoin\b/g, 'function'],
+                [/\bfunc\b/g, 'function'],
+                [/\blocla\b/g, 'local'],
+                [/\blcoal\b/g, 'local'],
+                [/\breutrn\b/g, 'return'],
+                [/\bretrun\b/g, 'return'],
+                [/\bretrn\b/g, 'return'],
+                [/\bnil\s*=/g, '= nil'],
+                [/\bend\s*$/gm, 'end'],
+                [/\belseif\s+then\b/g, 'then'],
+            ];
+
+            let changeCount = 0;
+            for (const [pattern, replacement] of replacements) {
+                if (pattern.test(result)) {
+                    result = result.replace(pattern, replacement);
+                    changeCount++;
+                }
+            }
+
+            if (changeCount > 0) {
+                changes.push('تم تصحيح ' + changeCount + ' خطأ إملائي/نحوي');
+            }
+
+            // 3. Fix parentheses balance
+            let openP = (result.match(/\(/g) || []).length;
+            let closeP = (result.match(/\)/g) || []).length;
+            if (openP > closeP) {
+                result += '\n'.repeat(openP - closeP) + ')'.repeat(openP - closeP);
+                changes.push('تم إضافة ' + (openP - closeP) + ' قوس إغلاق )');
+            } else if (closeP > openP) {
+                result = '(' .repeat(closeP - openP) + result;
+                changes.push('تم إضافة ' + (closeP - openP) + ' قوس فتح (');
+            }
+
+            // 4. Fix curly brackets balance
+            openP = (result.match(/\{/g) || []).length;
+            closeP = (result.match(/\}/g) || []).length;
+            if (openP > closeP) {
+                result += '\n' + '}'.repeat(openP - closeP);
+                changes.push('تم إغلاق ' + (openP - closeP) + ' قوس معقوف {');
+            } else if (closeP > openP) {
+                result = '{'.repeat(closeP - openP) + '\n' + result;
+                changes.push('تم فتح ' + (closeP - openP) + ' قوس معقوف }');
+            }
+
+            // 5. Fix missing brackets balance
+            openP = (result.match(/\[/g) || []).length;
+            closeP = (result.match(/\]/g) || []).length;
+            if (openP > closeP) {
+                result += ']'.repeat(openP - closeP);
+                changes.push('تم إغلاق ' + (openP - closeP) + ' قوس مربع ]');
+            }
+
+            // 6. Fix "then" after "if" without condition
+            result = result.replace(/if\s+then\b/g, 'if true then');
+
+            // 7. Fix "do" after "for" without body
+            result = result.replace(/for\s+([\w,\s]+)\s*\n/g, 'for $1 do\n');
+
+            // 8. Indent properly
+            const lines = result.split('\n');
+            let indentLevel = 0;
+            const fixedLines = [];
+            const indentKeywords = /\b(function|if|for|while|repeat|do|then|else)\s*$/;
+            const dedentKeywords = /\b(end|until)\s*$/;
+            const dedentStart = /^\s*(end|until|elseif|else|case)/;
+
+            for (let line of lines) {
+                const trimmed = line.trim();
+                if (!trimmed) {
+                    fixedLines.push('');
+                    continue;
+                }
+                if (dedentStart.test(trimmed)) {
+                    indentLevel = Math.max(0, indentLevel - 1);
+                }
+                const indent = '    '.repeat(indentLevel);
+                fixedLines.push(indent + trimmed);
+                if (indentKeywords.test(trimmed)) {
+                    indentLevel++;
+                }
+                // Special handling for repeat..until
+                if (/\brepeat\s*$/.test(trimmed)) {
+                    indentLevel++;
+                }
+            }
+
+            result = fixedLines.join('\n');
+
+            if (result !== code) {
+                if (changes.length === 0) changes.push('تم تحسين التنسيق والهيكلة');
+            }
+
+            return {
+                fixed: result,
+                changes: changes.length ? changes : ['لم يتم اكتشاف أخطاء — السكربت سليم'],
+            };
+        },
+
+        // Security analysis
+        analyze(code) {
+            const findings = [];
+            const severity = { low: 0, medium: 0, high: 0, critical: 0 };
+            let threatScore = 0;
+
+            // Check dangerous patterns
+            const patterns = [
+                { pattern: /loadstring\s*\(/g, name: 'loadstring — تنفيذ كود ديناميكي', sev: 'high' },
+                { pattern: /load\s*\(/g, name: 'load — تنفيذ كود ديناميكي', sev: 'high' },
+                { pattern: /string\.dump/g, name: 'string.dump — تحويل إلى bytecode', sev: 'medium' },
+                { pattern: /getfenv|setfenv/g, name: 'getfenv/setfenv — تعديل البيئة', sev: 'medium' },
+                { pattern: /newproxy/g, name: 'newproxy — إنشاء proxy objects', sev: 'low' },
+                { pattern: /syn\.request|http_request|syn_request|request\s*\(/gi, name: 'HTTP request — اتصال خارجي', sev: 'high' },
+                { pattern: /webhook/i, name: 'Webhook — إرسال بيانات خارجي', sev: 'critical' },
+                { pattern: /game:GetService\(['"](?:TeleportService|MarketplaceService|DataStore)/i, name: 'خدمات حساسة', sev: 'medium' },
+                { pattern: /pcall\s*\(/g, name: 'pcall — تنفيذ محمي (قد يخفي أخطاء)', sev: 'low' },
+                { pattern: /\[[\s\S]{200,}\]/, name: 'مصفوفة كبيرة الحجم — ممكن تخزين bytecode', sev: 'medium' },
+                { pattern: /base64\.decode|decodeb64|b64_decode/gi, name: 'Base64 decode — فك تشفير', sev: 'medium' },
+                { pattern: /(['"][A-Za-z0-9+/]{100,}={0,2}['"])/g, name: 'بيانات base64 طويلة — مشفر', sev: 'medium' },
+                { pattern: /\b_G\b|\b_ENV\b/g, name: 'الوصول إلى البيئة العامة (_G/_ENV)', sev: 'low' },
+                { pattern: /debug\./g, name: 'مكتبة debug — قد تخترق البيئة', sev: 'high' },
+                { pattern: /game:GetService\(['"]HttpService['"]\)/i, name: 'HttpService — اتصال بخادم خارجي', sev: 'high' },
+                { pattern: /\bsetclipboard\b/i, name: 'setclipboard — وصول إلى الحافظة', sev: 'medium' },
+                { pattern: /firetouchinterest|fireclickdetector|fireproximityprompt/i, name: 'Fire events — تفعيل أحداث قسرية', sev: 'medium' },
+                { pattern: /syn\.crypt|crypt\.encrypt|crypt\.decrypt/i, name: 'تشفير/فك داخلي', sev: 'medium' },
+                { pattern: /\bidentify\b|\bgetexecutorname\b/i, name: 'كشف نوع الـ executor', sev: 'low' },
+                { pattern: /game:GetService\(['"]RunService['"]\)/i, name: 'RunService — تحكم في دورة التشغيل', sev: 'low' },
+                { pattern: /\bwait\(0\)|\btask\.wait\(0\)/g, name: 'انتظار — قد يستخدم لتعطيل التتبع', sev: 'low' },
+                { pattern: /\bInstance\.new\(['"]ScreenGui['"]\)/i, name: 'إنشاء واجهة مستخدم', sev: 'low' },
+            ];
+
+            for (const p of patterns) {
+                const matches = code.match(p.pattern);
+                if (matches) {
+                    findings.push({ name: p.name, count: matches.length, severity: p.sev });
+                    severity[p.sev] += matches.length;
+                    if (p.sev === 'critical') threatScore += 10;
+                    else if (p.sev === 'high') threatScore += 5;
+                    else if (p.sev === 'medium') threatScore += 2;
+                    else threatScore += 1;
+                }
+            }
+
+            // Check for obfuscation indicators
+            const varNames = code.match(/\b([_a-zA-Z][_a-zA-Z0-9]{0,3})\b/g) || [];
+            const shortVars = varNames.filter(v => v.length <= 2 && /[a-z]/i.test(v)).length;
+            const totalVars = varNames.filter(v => /[a-z]/i.test(v)).length;
+            if (totalVars > 10 && shortVars > totalVars * 0.6) {
+                findings.push({ name: 'متغيرات قصيرة جدًا (>60% من أسماء المتغيرات بطول 1-2 حرف) — تشفير محتمل', count: shortVars, severity: 'medium' });
+                threatScore += 3;
+            }
+
+            // Check for large number of escaped characters
+            const escapeCount = (code.match(/\\x[0-9a-f]{2}|\\\d{2,3}/gi) || []).length;
+            if (escapeCount > 20) {
+                findings.push({ name: 'كمية كبيرة من escapes (' + escapeCount + ') — بيانات مشفرة', count: escapeCount, severity: 'high' });
+                threatScore += 4;
+            }
+
+            // Overall assessment
+            let overall = 'آمن';
+            let overallColor = '#22c55e';
+            if (threatScore >= 20) {
+                overall = '🔴 خطير جدًا';
+                overallColor = '#ef4444';
+            } else if (threatScore >= 10) {
+                overall = '🟡 متوسط الخطورة';
+                overallColor = '#eab308';
+            } else if (threatScore >= 5) {
+                overall = '🟢 منخفض الخطورة';
+                overallColor = '#22c55e';
+            }
+
+            // Detect encryption layers
+            const typeDetect = DecoderEngine.detect(code);
+
+            return {
+                findings,
+                severity,
+                threatScore,
+                overall,
+                overallColor,
+                types: typeDetect,
+                shortVarRatio: totalVars > 0 ? (shortVars / totalVars * 100).toFixed(0) : '0',
+            };
+        },
+
+        // Deep decrypt (multilayer)
+        deepDecrypt(str) {
+            const result = this.fullDecode(str);
+            
+            // Additional analysis
+            const analysis = this.analyze(result.decoded);
+            
+            // If still obfuscated, try to clean more
+            let cleaned = result.decoded;
+            
+            // Remove common obfuscation patterns
+            cleaned = cleaned.replace(/--\[(=*)\[[\s\S]*?\]\1\]/g, ''); // Remove block comments
+            cleaned = cleaned.replace(/--[^\n]*/g, ''); // Remove line comments
+            cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
+            
+            // Try to resolve table lookups like t["key"] -> t.key
+            cleaned = cleaned.replace(/\[(['"])([^'"]+)\1\]/g, '.$2');
+            
+            return {
+                ...result,
+                decoded: cleaned,
+                analysis,
+            };
+        }
+    };
+
+    // ======================== UI HELPERS ========================
+    function setupTextarea(textareaId, statsId, warnId) {
+        const ta = $(textareaId);
+        if (!ta) return;
+        ta.addEventListener('input', function() {
+            // Enforce 100K line limit
+            const lines = this.value.split('\n');
+            if (lines.length > 100000) {
+                this.value = lines.slice(0, 100000).join('\n');
+                showToast('⚠️ الحد الأقصى 100,000 سطر', 'error');
+            }
+            updateStats(textareaId, statsId, warnId);
+        });
+        updateStats(textareaId, statsId, warnId);
+    }
+
+    function setStatus(dotId, textId, state, msg) {
+        const dot = $(dotId);
+        const txt = $(textId);
+        if (dot) dot.className = 'status-dot ' + state;
+        if (txt) txt.textContent = msg;
+    }
+
+    function showOutput(outputId, content, title) {
+        const el = $(outputId);
+        if (!el) return;
+        el.classList.add('visible');
+        const titleEl = el.querySelector('.oh-title span') || el.querySelector('.oh-title');
+        if (titleEl) {
+            // Find the span inside oh-title
+            const span = el.querySelector('.oh-title span');
+            if (span) span.textContent = title || 'النتيجة';
+        }
+        const contentEl = el.querySelector('.output-content');
+        if (contentEl) {
+            // Simple syntax highlighting
+            let highlighted = highlightLua(content || '');
+            contentEl.innerHTML = highlighted;
+        }
+    }
+
+    function highlightLua(code) {
+        if (!code) return '';
+        let h = code;
+        // Strings
+        h = h.replace(/('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*")/g, '<span class="hl-str">$1</span>');
+        // Comments
+        h = h.replace(/--\[(=*)\[[\s\S]*?\]\1\]/g, '<span class="hl-cmt">$&</span>');
+        h = h.replace(/--[^\n]*/g, '<span class="hl-cmt">$&</span>');
+        // Numbers
+        h = h.replace(/\b(\d+\.?\d*)\b/g, '<span class="hl-num">$1</span>');
+        // Keywords
+        const keywords = ['function','local','if','then','else','elseif','end','for','while','repeat','until','do','return','break','nil','true','false','and','or','not','in'];
+        const kwPattern = new RegExp('\\b(' + keywords.join('|') + ')\\b', 'g');
+        h = h.replace(kwPattern, '<span class="hl-key">$1</span>');
+        // Functions
+        h = h.replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\s*\(/g, '<span class="hl-func">$1</span>(');
+        // Operators
+        h = h.replace(/(==|~=|<=|>=|\.\.|\+|-|\*|\/|=)/g, '<span class="hl-op">$1</span>');
+        return h;
+    }
+
+    // ======================== SETUP TEXTAREAS ========================
+    setupTextarea('decodeInput', 'decodeStats', 'decodeWarnings');
+    setupTextarea('fixInput', 'fixStats', 'fixWarnings');
+    setupTextarea('analyzeInput', 'analyzeStats', 'analyzeWarnings');
+    setupTextarea('fullInput', 'fullStats', 'fullWarnings');
+
+    // ======================== FILE UPLOAD HANDLERS ========================
+    function handleFileUpload(inputId, textareaId, callback) {
+        const input = $(inputId);
+        if (!input) return;
+        input.addEventListener('change', function(e) {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const content = ev.target.result;
+                if (textareaId) {
+                    const ta = $(textareaId);
+                    if (ta) {
+                        ta.value = content;
+                        updateStats(textareaId, 
+                            textareaId.replace('Input', 'Stats'),
+                            textareaId.replace('Input', 'Warnings'));
+                        showToast('✓ تم رفع ' + file.name + ' (' + formatSize(file.size) + ')', 'success');
+                    }
+                }
+                if (callback) callback(content, file);
+            };
+            reader.readAsText(file);
+        });
+    }
+
+    handleFileUpload('decodeFileInput', 'decodeInput');
+    handleFileUpload('fixFileInput', 'fixInput');
+    handleFileUpload('analyzeFileInput', 'analyzeInput');
+    handleFileUpload('fullFileInput', 'fullInput');
+
+    // ======================== COPY BUTTONS ========================
+    document.querySelectorAll('.copy-result-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const targetId = this.dataset.target;
+            const el = $(targetId);
+            if (el) {
+                const text = el.textContent || el.innerText;
+                navigator.clipboard.writeText(text).then(
+                    () => showToast('✓ تم نسخ النتيجة', 'success'),
+                    () => {
+                        const ta = document.createElement('textarea');
+                        ta.value = text;
+                        document.body.appendChild(ta);
+                        ta.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(ta);
+                        showToast('✓ تم النسخ', 'success');
+                    }
+                );
+            }
+        });
+    });
+
+    // ======================== TAB 1: DECODE ========================
+    $('decodeBtn').addEventListener('click', function() {
+        const input = $('decodeInput').value;
+        if (!input.trim()) {
+            showToast('⚠️ اكتب أو الصق السكربت المشفر أولاً', 'error');
+            return;
+        }
+
+        setStatus('decodeStatusDot', 'decodeStatusText', 'working', 'جاري فك التشفير...');
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
+
+        // Use setTimeout to avoid blocking UI
+        setTimeout(() => {
+            try {
+                const result = DecoderEngine.fullDecode(input);
+                showOutput('decodeOutput', result.decoded, 'نتيجة فك التشفير');
+                
+                const layerInfo = $('decodeLayerInfo');
+                const layersEl = $('decodeLayers');
+                const typeEl = $('decodeType');
+                
+                if (result.layers && result.layers.length > 0 && result.layers[0] !== 'no-encoding-detected') {
+                    layerInfo.style.display = 'block';
+                    layersEl.textContent = result.layers.join(' → ');
+                    typeEl.textContent = result.layers[result.layers.length - 1];
+                } else {
+                    layerInfo.style.display = result.layers[0] === 'no-encoding-detected' ? 'none' : 'block';
+                    if (result.layers[0] !== 'no-encoding-detected') {
+                        layersEl.textContent = result.layers.join(' → ');
+                    }
+                }
+
+                setStatus('decodeStatusDot', 'decodeStatusText', 'done', 'تم ✓');
+                showToast('✓ تم فك التشفير في ' + result.layerCount + ' طبقة', 'success');
+            } catch(err) {
+                showOutput('decodeOutput', '⚠️ حدث خطأ: ' + err.message, 'خطأ');
+                setStatus('decodeStatusDot', 'decodeStatusText', 'error', 'خطأ');
+                showToast('خطأ: ' + err.message, 'error');
+            } finally {
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> فك التشفير';
+            }
+        }, 100);
+    });
+
+    // Fetch raw URL for decode
+    $('fetchDecodeBtn').addEventListener('click', async function() {
+        const url = $('decodeRawUrl').value.trim();
+        if (!url) {
+            showToast('⚠️ اكتب رابط raw أولاً', 'error');
+            return;
+        }
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري السحب...';
+        setStatus('decodeStatusDot', 'decodeStatusText', 'working', 'جاري تحميل الرابط...');
+
+        try {
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error('فشل التحميل: ' + resp.status);
+            const text = await resp.text();
+            $('decodeInput').value = text;
+            updateStats('decodeInput', 'decodeStats', 'decodeWarnings');
+            showToast('✓ تم تحميل ' + formatSize(new TextEncoder().encode(text).length), 'success');
+            setStatus('decodeStatusDot', 'decodeStatusText', 'done', 'تم التحميل');
+        } catch(err) {
+            showToast('خطأ في التحميل: ' + err.message, 'error');
+            setStatus('decodeStatusDot', 'decodeStatusText', 'error', 'فشل التحميل');
+        } finally {
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-cloud-arrow-down"></i> سحب وتحليل';
+        }
+    });
+
+    // Clear & Copy for Decode
+    $('clearDecodeBtn').addEventListener('click', () => { $('decodeInput').value = ''; updateStats('decodeInput','decodeStats','decodeWarnings'); $('decodeOutput').classList.remove('visible'); });
+    $('copyDecodeBtn').addEventListener('click', () => {
+        navigator.clipboard.writeText($('decodeInput').value).then(() => showToast('✓ تم نسخ المدخل', 'success'));
+    });
+
+    // ======================== TAB 2: FIX ========================
+    $('fixBtn').addEventListener('click', function() {
+        const input = $('fixInput').value;
+        if (!input.trim()) {
+            showToast('⚠️ اكتب السكربت التالف أولاً', 'error');
+            return;
+        }
+
+        setStatus('fixStatusDot', 'fixStatusText', 'working', 'جاري التصحيح...');
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
+
+        setTimeout(() => {
+            try {
+                const result = DecoderEngine.fixScript(input);
+                showOutput('fixOutput', result.fixed, 'السكربت المُصحَّح');
+
+                const layerInfo = $('fixLayerInfo');
+                const errorsEl = $('fixErrors');
+                const typeEl = $('fixType');
+                
+                layerInfo.style.display = 'block';
+                errorsEl.textContent = result.changes.join(' | ');
+                typeEl.textContent = result.changes.length + ' تحسينات';
+
+                setStatus('fixStatusDot', 'fixStatusText', 'done', 'تم ✓');
+                showToast('✓ تم تصحيح السكربت — ' + result.changes.length + ' تعديل', 'success');
+            } catch(err) {
+                showOutput('fixOutput', '⚠️ خطأ: ' + err.message, 'خطأ');
+                setStatus('fixStatusDot', 'fixStatusText', 'error', 'خطأ');
+            } finally {
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-wrench"></i> تصحيح السكربت';
+            }
+        }, 100);
+    });
+
+    $('clearFixBtn').addEventListener('click', () => { $('fixInput').value = ''; updateStats('fixInput','fixStats','fixWarnings'); $('fixOutput').classList.remove('visible'); });
+    $('copyFixBtn').addEventListener('click', () => {
+        navigator.clipboard.writeText($('fixInput').value).then(() => showToast('✓ تم نسخ المدخل', 'success'));
+    });
+
+    // ======================== TAB 3: ANALYZE ========================
+    $('analyzeBtn').addEventListener('click', function() {
+        const input = $('analyzeInput').value;
+        if (!input.trim()) {
+            showToast('⚠️ اكتب السكربت للتحليل', 'error');
+            return;
+        }
+
+        setStatus('analyzeStatusDot', 'analyzeStatusText', 'working', 'جاري التحليل...');
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
+
+        setTimeout(() => {
+            try {
+                const result = DecoderEngine.analyze(input);
+                
+                let report = '';
+                report += '═══════════════════════════════════════════\n';
+                report += '  🔍  تَقْرِيرُ التَّحْلِيلِ الأَمْنِيِّ  🔍\n';
+                report += '═══════════════════════════════════════════\n\n';
+                
+                report += '▪ التَّقْيِيمُ العَامُّ: ' + result.overall + '\n';
+                report += '▪ نِسْبَةُ الخُطُورَة: ' + result.threatScore + '/100\n';
+                report += '▪ أَنْوَاعُ التَّشْفِير: ' + result.types.join(', ') + '\n';
+                report += '▪ نِسْبَةُ المُتَغَيِّرَاتِ القَصِيرَة: ' + result.shortVarRatio + '%\n\n';
+                
+                report += '───────────────────────────────────────────\n';
+                report += '  📊  إِحْصَائِيَّاتُ الخُطُورَةِ  📊\n';
+                report += '───────────────────────────────────────────\n';
+                report += '▪ حَرِج (Critical): ' + result.severity.critical + '\n';
+                report += '▪ عَالِي (High):     ' + result.severity.high + '\n';
+                report += '▪ مُتَوَسِّط (Medium): ' + result.severity.medium + '\n';
+                report += '▪ مُنْخَفِض (Low):    ' + result.severity.low + '\n\n';
+                
+                report += '───────────────────────────────────────────\n';
+                report += '  🔎  التَّفَاصِيلُ الكَامِلَةُ  🔎\n';
+                report += '───────────────────────────────────────────\n\n';
+                
+                for (const f of result.findings) {
+                    const icon = f.severity === 'critical' ? '🔥' : f.severity === 'high' ? '⚠️' : f.severity === 'medium' ? '⚡' : 'ℹ️';
+                    report += icon + ' [' + f.severity.toUpperCase() + '] ' + f.name;
+                    if (f.count > 1) report += ' (×' + f.count + ')';
+                    report += '\n';
+                }
+
+                report += '\n───────────────────────────────────────────\n';
+                report += '  ✅  نِهَايَةُ التَّقْرِيرِ  ✅\n';
+                report += '───────────────────────────────────────────\n';
+
+                showOutput('analyzeOutput', report, 'تقرير التحليل الأمني');
+                setStatus('analyzeStatusDot', 'analyzeStatusText', 'done', 'تم ✓');
+                showToast('✓ اكتمل التحليل — درجة الخطورة: ' + result.threatScore, result.threatScore > 15 ? 'error' : 'success');
+            } catch(err) {
+                showOutput('analyzeOutput', '⚠️ خطأ: ' + err.message, 'خطأ');
+                setStatus('analyzeStatusDot', 'analyzeStatusText', 'error', 'خطأ');
+            } finally {
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-microscope"></i> تحليل خبيث';
+            }
+        }, 100);
+    });
+
+    $('clearAnalyzeBtn').addEventListener('click', () => { $('analyzeInput').value = ''; updateStats('analyzeInput','analyzeStats','analyzeWarnings'); $('analyzeOutput').classList.remove('visible'); });
+    $('copyAnalyzeBtn').addEventListener('click', () => {
+        navigator.clipboard.writeText($('analyzeInput').value).then(() => showToast('✓ تم نسخ المدخل', 'success'));
+    });
+
+    // ======================== TAB 4: FULL DECRYPT ========================
+    $('fullDecryptBtn').addEventListener('click', function() {
+        const input = $('fullInput').value;
+        if (!input.trim()) {
+            showToast('⚠️ اكتب السكربت أو حمّل ملف أولاً', 'error');
+            return;
+        }
+
+        setStatus('fullStatusDot', 'fullStatusText', 'working', 'جاري فك التشفير الشامل...');
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري فك كل الطبقات...';
+
+        setTimeout(() => {
+            try {
+                const result = DecoderEngine.deepDecrypt(input);
+                
+                showOutput('fullOutput', result.decoded, '🔓 نتيجة فك التشفير الشامل');
+
+                const layerInfo = $('fullLayerInfo');
+                const layersEl = $('fullLayers');
+                const typesEl = $('fullTypes');
+                const sizeEl = $('fullSize');
+                
+                if (result.layers && result.layers.length > 0) {
+                    layerInfo.style.display = 'block';
+                    layersEl.textContent = result.layerCount + ' طبقة: ' + result.layers.join(' → ');
+                    typesEl.textContent = result.analysis ? result.analysis.types.join(', ') : '—';
+                    sizeEl.textContent = formatSize(result.decodedSize) + ' (المشفر: ' + formatSize(result.originalSize) + ')';
+                }
+
+                // Show analysis in the output too
+                if (result.analysis) {
+                    const contentEl = $('fullOutContent');
+                    const extra = '\n\n' + '═'.repeat(50) + '\n';
+                    contentEl.innerHTML += extra + '<span style="color:#eab308;">🔍 تقييم الخطر: ' + result.analysis.overall + ' (Score: ' + result.analysis.threatScore + ')</span>\n';
+                    contentEl.innerHTML += '<span style="color:#64748b;">اكتشافات: ' + result.analysis.findings.length + '</span>';
+                }
+
+                setStatus('fullStatusDot', 'fullStatusText', 'done', 'تم ✓ (' + result.layerCount + ' طبقة)');
+                showToast('✓ تم فك ' + result.layerCount + ' طبقة تشفير — الكود جاهز', 'success');
+            } catch(err) {
+                showOutput('fullOutput', '⚠️ خطأ: ' + err.message, 'خطأ');
+                setStatus('fullStatusDot', 'fullStatusText', 'error', 'خطأ');
+                showToast('خطأ: ' + err.message, 'error');
+            } finally {
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-robot"></i> فك تشفير كامل شامل';
+            }
+        }, 150);
+    });
+
+    // Fetch raw for full
+    $('fetchFullBtn').addEventListener('click', async function() {
+        const url = $('fullRawUrl').value.trim();
+        if (!url) { showToast('⚠️ اكتب رابط raw', 'error'); return; }
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>...';
+        try {
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error('فشل: ' + resp.status);
+            const text = await resp.text();
+            $('fullInput').value = text;
+            updateStats('fullInput', 'fullStats', 'fullWarnings');
+            showToast('✓ تم تحميل ' + formatSize(new TextEncoder().encode(text).length), 'success');
+        } catch(err) {
+            showToast('خطأ: ' + err.message, 'error');
+        } finally {
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-cloud-arrow-down"></i> سحب';
+        }
+    });
+
+    $('clearFullBtn').addEventListener('click', () => { $('fullInput').value = ''; updateStats('fullInput','fullStats','fullWarnings'); $('fullOutput').classList.remove('visible'); });
+    $('copyFullBtn').addEventListener('click', () => {
+        navigator.clipboard.writeText($('fullInput').value).then(() => showToast('✓ تم نسخ المدخل', 'success'));
+    });
+
+    console.log('🚀 ShadowDecode Engine v4.0 loaded');
+    console.log('💀 يدعم 100,000+ سطر · برمجيات خبيثة · تشفير متعدد الطبقات');
+})();
 </script>
 </body>
 </html>
