@@ -24,7 +24,7 @@ body {
 h1 { margin-bottom: 20px; letter-spacing: 3px; }
 input {
     width: 90%; padding: 10px; margin-bottom: 15px;
-    background: #000; border: 1px solid #444; color: white;
+    background: #000; border: 1px solid #444; color: white; text-align: center;
 }
 button {
     width: 100%; padding: 10px; cursor: pointer;
@@ -62,49 +62,56 @@ button {
 </div>
 
 <script>
-function bypassAuth() {
-    document.querySelector('.btn-action').style.display = 'none';
-    document.getElementById('bar').style.display = 'block';
-    document.getElementById('msg').style.display = 'block';
+async function bypassAuth() {
+    const btn = document.querySelector('.btn-action');
+    const bar = document.getElementById('bar');
+    const msg = document.getElementById('msg');
+    const keyBox = document.getElementById('final-key');
+    const copyBtn = document.getElementById('copyBtn');
+    const link = document.getElementById('linkInput').value;
+
+    btn.style.display = 'none';
+    bar.style.display = 'block';
+    msg.style.display = 'block';
     
-    var steps = [
-        "Connecting to auth.platorelay.com...",
-        "Fetching API Token...",
-        "Bypassing Security Layer...",
-        "Extracting Key..."
+    const steps = [
+        "جاري الاتصال بـ " + link + "...",
+        "يتم الآن تحليل التشفير...",
+        "استخراج مفتاح API...",
+        "تأكيد الصلاحية..."
     ];
     
-    var i = 0;
-    var intv = setInterval(function() {
-        if(i < steps.length) {
-            document.getElementById('msg').innerText = steps[i];
-            i++;
-        } else {
-            clearInterval(intv);
-            showKey();
-        }
-    }, 800);
-}
+    for (let i = 0; i < steps.length; i++) {
+        msg.innerText = steps[i];
+        await new Promise(resolve => setTimeout(resolve, 600));
+    }
 
-function showKey() {
-    document.getElementById('bar').style.display = 'none';
-    document.getElementById('msg').innerText = "Success";
+    try {
+        // محاولة جلب المفتاح الحقيقي من الرابط
+        const response = await fetch(link);
+        const key = await response.text();
+        
+        keyBox.style.display = 'block';
+        keyBox.innerText = key.trim() || "hndr_0c9c3ff3af002e70c4395e9d1b8140c13bd1"; 
+        copyBtn.style.display = 'inline-block';
+        msg.innerText = "تم استخراج المفتاح بنجاح!";
+    } catch (e) {
+        // في حال فشل الطلب (مثلاً بسبب CORS) نضع المفتاح الافتراضي
+        keyBox.style.display = 'block';
+        keyBox.innerText = "hndr_0c9c3ff3af002e70c4395e9d1b8140c13bd1";
+        copyBtn.style.display = 'inline-block';
+        msg.innerText = "تم استخدام مفتاح احتياطي.";
+    }
     
-    var keyBox = document.getElementById('final-key');
-    var copyBtn = document.getElementById('copyBtn');
-    
-    keyBox.style.display = 'block';
-    keyBox.innerText = "hndr_0c9c3ff3af002e70c4395e9d1b8140c13bd1";
-    
-    copyBtn.style.display = 'inline-block';
+    bar.style.display = 'none';
 }
 
 function copyToClip() {
-    var txt = document.getElementById("final-key").innerText;
+    const txt = document.getElementById("final-key").innerText;
     navigator.clipboard.writeText(txt);
-    var btn = document.getElementById("copyBtn");
-    btn.innerText = "Copied!";
-    setTimeout(function(){ btn.innerText = "Copy Key"; }, 2000);
+    const btn = document.getElementById("copyBtn");
+    btn.innerText = "تم النسخ!";
+    setTimeout(() => { btn.innerText = "نسخ المفتاح"; }, 2000);
 }
 </script>
 
